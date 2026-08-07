@@ -6,39 +6,23 @@ class ResponsiveRow extends StatelessWidget {
   final Widget left;
   final Widget right;
 
-  const ResponsiveRow({
-    super.key,
-    required this.left,
-    required this.right,
-  });
+  const ResponsiveRow({super.key, required this.left, required this.right});
 
   @override
   Widget build(BuildContext context) {
     if (Responsive.isMobile(context)) {
       return Column(
-        children: [
-          right,
-          const SizedBox(height: 50),
-          left,
-        ],
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [left, const SizedBox(height: 40), right],
       );
     }
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-
-        Expanded(
-          flex: 6,
-          child: left,
-        ),
-
-        SizedBox(width: 60),
-
-        Expanded(
-          flex: 5,
-          child: right,
-        ),
-
+        Expanded(flex: 6, child: left),
+        const SizedBox(width: 40),
+        Expanded(flex: 5, child: right),
       ],
     );
   }

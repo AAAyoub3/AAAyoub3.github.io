@@ -16,22 +16,21 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return ElevatedButton.icon(
       onPressed: onPressed,
-      icon: icon == null
-          ? const SizedBox.shrink()
-          : Icon(icon, size: 20),
+      icon: icon == null ? const SizedBox.shrink() : Icon(icon, size: 20),
       label: Text(text),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 26,
-          vertical: 18,
+        minimumSize: isMobile ? const Size(0, 48) : const Size(0, 54),
+        padding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 20 : 26,
+          vertical: isMobile ? 14 : 18,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
   }

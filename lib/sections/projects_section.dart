@@ -19,124 +19,226 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
   int currentPage = 0;
 
-  // 2 projects per page
   static const int itemsPerPage = 2;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    // Preload all project images once.
     for (final project in PortfolioData.projects) {
-      precacheImage(AssetImage(project.image), context);
+      precacheImage(
+        AssetImage(project.image),
+        context,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+
+    // Desktop / tablet = 2 projects per page.
+    // Mobile = 1 project per page.
+    final currentItemsPerPage = isMobile ? 1 : itemsPerPage;
+
     final pages = <List>[
-      for (int i = 0; i < PortfolioData.projects.length; i += itemsPerPage)
+      for (
+        int i = 0;
+        i < PortfolioData.projects.length;
+        i += currentItemsPerPage
+      )
         PortfolioData.projects.sublist(
           i,
-          min(i + itemsPerPage, PortfolioData.projects.length),
+          min(
+            i + currentItemsPerPage,
+            PortfolioData.projects.length,
+          ),
         ),
     ];
+
+    /*
+     * Calculate a proper height for the PageView.
+     *
+     * The PageView MUST have a bounded height.
+     *
+     * Mobile:
+     *   1 project → taller card
+     *
+     * Tablet/Desktop:
+     *   2 projects side by side
+     */
+    final double projectsHeight;
+
+    if (isMobile) {
+      projectsHeight = 620;
+    } else if (isTablet) {
+      projectsHeight = 620;
+    } else {
+      projectsHeight = 650;
+    }
 
     return Section(
       child: Column(
         children: [
-          // ==========================================================
-          // Header
-          // ==========================================================
-          SectionTitle(title: "PROJECTS", subtitle: "Featured Projects"),
+          const SectionTitle(
+            title: "PROJECTS",
+            subtitle: "Featured Projects",
+          ),
+
+          SizedBox(
+            height: isMobile ? 16 : 24,
+          ),
+
+          // --------------------------------------------------
+          // Pagination Controls
+          // --------------------------------------------------
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // Previous button
               IconButton(
+                tooltip: "Previous projects",
                 onPressed: currentPage == 0
                     ? null
                     : () {
                         controller.previousPage(
-                          duration: const Duration(milliseconds: 600),
+                          duration: const Duration(
+                            milliseconds: 600,
+                          ),
                           curve: Curves.easeOutCubic,
                         );
                       },
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  size: 18,
+                ),
               ),
 
-              // Page indicator
-              Text(
-                "${currentPage + 1} / ${pages.length}",
-                style: const TextStyle(color: Colors.white70, fontSize: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                ),
+                child: Text(
+                  "${currentPage + 1} / ${pages.length}",
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                  ),
+                ),
               ),
 
-              // Next button
               IconButton(
+                tooltip: "Next projects",
                 onPressed: currentPage == pages.length - 1
                     ? null
                     : () {
                         controller.nextPage(
-                          duration: const Duration(milliseconds: 600),
+                          duration: const Duration(
+                            milliseconds: 600,
+                          ),
                           curve: Curves.easeOutCubic,
                         );
                       },
-                icon: const Icon(Icons.arrow_forward_ios),
+                icon: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 18,
+                ),
               ),
             ],
           ),
 
-          const SizedBox(height: 50),
-
-          // ==========================================================
-          // Projects
-          // ==========================================================
           SizedBox(
-            height: 700,
+            height: isMobile ? 24 : 40,
+          ),
 
+          // --------------------------------------------------
+          // IMPORTANT:
+          // PageView MUST have a bounded height.
+          // --------------------------------------------------
+          SizedBox(
+            height: projectsHeight,
             child: PageView.builder(
               controller: controller,
-
               itemCount: pages.length,
 
               onPageChanged: (index) {
+                if (!mounted) return;
+
                 setState(() {
                   currentPage = index;
                 });
               },
 
-              itemBuilder: (_, pageIndex) {
+              itemBuilder: (context, pageIndex) {
                 final projects = pages[pageIndex];
 
                 return AnimatedBuilder(
                   animation: controller,
                   builder: (context, child) {
-                    double value = 1.0;
+                    double scale = 1.0;
+                    double opacity = 1.0;
 
-                    if (controller.position.haveDimensions) {
-                      value = controller.page! - pageIndex;
-                      value = (1 - (value.abs() * 0.15)).clamp(0.85, 1.0);
+                    if (controller.hasClients &&
+                        controller.position.haveDimensions) {
+                      final page = controller.page;
+
+                      if (page != null) {
+                        final difference =
+                            (page - pageIndex).abs();
+
+                        scale = (1 - difference * 0.08)
+                            .clamp(0.92, 1.0);
+
+                        opacity = (1 - difference * 0.15)
+                            .clamp(0.85, 1.0);
+                      }
                     }
 
                     return Transform.scale(
-                      scale: value,
-                      child: Opacity(opacity: value, child: child),
+                      scale: scale,
+                      child: Opacity(
+                        opacity: opacity,
+                        child: child,
+                      ),
                     );
                   },
 
                   child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
+                    // The GridView is not responsible for scrolling.
+                    physics:
+                        const NeverScrollableScrollPhysics(),
+
+                    // The PageView controls the scrolling.
+                    shrinkWrap: true,
+
+                    padding: EdgeInsets.zero,
 
                     itemCount: projects.length,
 
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 25,
-                          mainAxisSpacing: 25,
-                          childAspectRatio: 0.78,
-                        ),
+                        SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: isMobile ? 1 : 2,
 
-                    itemBuilder: (_, index) {
-                      return ProjectCard(project: projects[index]);
+                      crossAxisSpacing: isMobile ? 0 : 20,
+
+                      mainAxisSpacing: 20,
+
+                      /*
+                       * Project cards should have enough
+                       * vertical space to display completely.
+                       */
+                      childAspectRatio: isMobile
+                          ? 0.78
+                          : 0.78,
+                    ),
+
+                    itemBuilder: (context, index) {
+                      return ProjectCard(
+                        project: projects[index],
+                      );
                     },
                   ),
                 );

@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../core/constants/app_colors.dart';
+import '../core/utils/responsive.dart';
 
 class SectionTitle extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const SectionTitle({
-    super.key,
-    required this.title,
-    required this.subtitle,
-  });
+  const SectionTitle({super.key, required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+
     return Column(
       children: [
-
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18,
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 14 : 18,
             vertical: 8,
           ),
           decoration: BoxDecoration(
@@ -28,24 +26,22 @@ class SectionTitle extends StatelessWidget {
           ),
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,
+              fontSize: isMobile ? 12 : 14,
             ),
           ),
         ),
-
-        const SizedBox(height: 24),
-
+        SizedBox(height: isMobile ? 16 : 24),
         Text(
           subtitle,
-          style: const TextStyle(
-            fontSize: 42,
+          style: TextStyle(
+            fontSize: Responsive.sectionTitleSize(context),
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
         ),
-
       ],
     );
   }

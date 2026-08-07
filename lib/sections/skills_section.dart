@@ -11,6 +11,11 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    final isTablet =
+        MediaQuery.of(context).size.width >= 600 &&
+        MediaQuery.of(context).size.width < 1024;
+
     return Section(
       child: Column(
         children: [
@@ -18,27 +23,33 @@ class SkillsSection extends StatelessWidget {
             title: "TECH STACK",
             subtitle: "Technologies I Work With",
           ),
-
-          const SizedBox(height: 60),
-
+          SizedBox(height: isMobile ? 32 : 60),
           Wrap(
             spacing: 20,
             runSpacing: 20,
-            alignment: WrapAlignment.center,
-
+            alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
             children: PortfolioData.skills
                 .map(
                   (skill) => SizedBox(
-                    width: 170,
-                    height: 100,
+                    width: isMobile
+                        ? (MediaQuery.of(context).size.width - 56) / 2
+                        : isTablet
+                        ? 180
+                        : 170,
                     child: HoverCard(
-                      child: Center(
-                        child: Text(
-                          skill.title,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 12 : 16,
+                          vertical: 20,
+                        ),
+                        child: Center(
+                          child: Text(
+                            skill.title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: isMobile ? 15 : 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),

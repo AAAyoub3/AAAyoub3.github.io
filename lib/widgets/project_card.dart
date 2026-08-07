@@ -20,6 +20,8 @@ class _ProjectCardState extends State<ProjectCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return MouseRegion(
       onEnter: (_) => setState(() => hovering = true),
       onExit: (_) => setState(() => hovering = false),
@@ -47,9 +49,6 @@ class _ProjectCardState extends State<ProjectCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // =========================
-              // Project Image
-              // =========================
               Stack(
                 alignment: Alignment.center,
                 children: [
@@ -64,15 +63,11 @@ class _ProjectCardState extends State<ProjectCard> {
                       ),
                     ),
                   ),
-
-                  // Hover Overlay
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 250),
                     opacity: hovering ? 1.0 : 0.0,
                     child: Container(color: Colors.black54),
                   ),
-
-                  // GitHub Button
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 250),
                     opacity: hovering ? 1.0 : 0.0,
@@ -89,79 +84,65 @@ class _ProjectCardState extends State<ProjectCard> {
                   ),
                 ],
               ),
-
-              // =========================
-              // Project Information
-              // =========================
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.project.title,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
+              Padding(
+                padding: EdgeInsets.all(isMobile ? 18 : 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.project.title,
+                      style: TextStyle(
+                        fontSize: isMobile ? 22 : 28,
+                        fontWeight: FontWeight.bold,
                       ),
-
-                      const SizedBox(height: 6),
-
-                      Text(
-                        widget.project.subtitle,
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 16,
-                        ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      widget.project.subtitle,
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontSize: isMobile ? 14 : 16,
                       ),
-
-                      const SizedBox(height: 18),
-
-                      Text(
-                        widget.project.description,
-                        style: const TextStyle(height: 1.7),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      widget.project.description,
+                      style: TextStyle(
+                        height: 1.7,
+                        fontSize: isMobile ? 14 : 16,
                       ),
-
-                      const SizedBox(height: 25),
-
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        children: widget.project.technologies
-                            .map((tech) => Chip(label: Text(tech)))
-                            .toList(),
-                      ),
-
-                      const Spacer(),
-
-                      // =========================
-                      // View Source Button
-                      // =========================
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: FilledButton.icon(
-                          style: const ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              AppColors.primary,
-                            ),
-                          ),
-                          onPressed: () =>
-                              LaunchUtils.openUrl(widget.project.github),
-                          icon: const FaIcon(
-                            FontAwesomeIcons.github,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                          label: const Text(
-                            "View Source",
-                            style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: widget.project.technologies
+                          .map((tech) => Chip(label: Text(tech)))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            AppColors.primary,
                           ),
                         ),
+                        onPressed: () =>
+                            LaunchUtils.openUrl(widget.project.github),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.github,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          "View Source",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],

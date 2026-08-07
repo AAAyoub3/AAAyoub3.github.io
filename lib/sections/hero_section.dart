@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portfolio/core/utils/launch_utils.dart';
 import 'package:portfolio/widgets/social_button.dart';
 import '../core/constants/app_strings.dart';
+import '../core/utils/responsive.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/responsive_row.dart';
 import '../widgets/section.dart';
@@ -13,10 +14,14 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+
     return Section(
       child: ResponsiveRow(
         left: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: isMobile
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
@@ -26,50 +31,49 @@ class HeroSection extends StatelessWidget {
               ),
               child: const Text("👋 Hello, I'm"),
             ),
-
-            const SizedBox(height: 30),
-
-            const Text(
+            SizedBox(height: isMobile ? 20 : 30),
+            Text(
               AppStrings.name,
               style: TextStyle(
-                fontSize: 58,
+                fontSize: Responsive.heroTitleSize(context),
                 fontWeight: FontWeight.bold,
                 height: 1.1,
               ),
+              textAlign: isMobile ? TextAlign.center : TextAlign.start,
             ),
-
-            const SizedBox(height: 18),
-
-            const Text(
+            SizedBox(height: isMobile ? 14 : 18),
+            Text(
               AppStrings.title,
               style: TextStyle(
-                fontSize: 28,
+                fontSize: Responsive.heroSubtitleSize(context),
                 color: Colors.blue,
                 fontWeight: FontWeight.w600,
               ),
+              textAlign: isMobile ? TextAlign.center : TextAlign.start,
             ),
-
-            const SizedBox(height: 30),
-
-            const Text(
-              AppStrings.shortDescription,
-              style: TextStyle(fontSize: 20, height: 1.8),
+            SizedBox(height: isMobile ? 20 : 30),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 620),
+              child: Text(
+                AppStrings.shortDescription,
+                style: TextStyle(
+                  fontSize: Responsive.heroDescriptionSize(context),
+                  height: 1.8,
+                ),
+                textAlign: isMobile ? TextAlign.center : TextAlign.start,
+              ),
             ),
-
-            const SizedBox(height: 45),
-
-            Row(
+            SizedBox(height: isMobile ? 28 : 45),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
               children: [
                 CustomButton(
                   text: "Download CV",
                   icon: Icons.download,
                   onPressed: downloadCv,
                 ),
-
-                const SizedBox(width: 20),
-
-                const SizedBox(width: 24),
-
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -83,9 +87,7 @@ class HeroSection extends StatelessWidget {
                         LaunchUtils.openUrl(AppStrings.github);
                       },
                     ),
-
                     const SizedBox(width: 12),
-
                     SocialButton(
                       icon: const FaIcon(
                         FontAwesomeIcons.linkedin,
@@ -96,9 +98,7 @@ class HeroSection extends StatelessWidget {
                         LaunchUtils.openUrl(AppStrings.linkedin);
                       },
                     ),
-
                     const SizedBox(width: 12),
-
                     SocialButton(
                       icon: const Icon(
                         Icons.email_rounded,
@@ -115,23 +115,21 @@ class HeroSection extends StatelessWidget {
             ),
           ],
         ),
-
         right: Center(
           child: Stack(
             alignment: Alignment.center,
             children: [
               Container(
-                width: 360,
-                height: 360,
+                width: isMobile ? 250 : 360,
+                height: isMobile ? 250 : 360,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.blue.withOpacity(.15),
                 ),
               ),
-
               Container(
-                width: 300,
-                height: 300,
+                width: isMobile ? 210 : 300,
+                height: isMobile ? 210 : 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.blue, width: 4),

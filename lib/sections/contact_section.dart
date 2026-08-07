@@ -17,16 +17,37 @@ class ContactSection extends StatelessWidget {
     String subtitle,
     VoidCallback onTap,
   ) {
-    return ListTile(
-      leading: CircleAvatar(child: FaIcon(icon, size: 20, color: Colors.white)),
-      title: Text(title),
-      subtitle: Text(subtitle),
-      onTap: onTap,
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
+        leading: CircleAvatar(
+          child: FaIcon(
+            icon,
+            size: 20,
+            color: Colors.white,
+          ),
+        ),
+        title: Text(title),
+        subtitle: Text(
+          subtitle,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+        ),
+        onTap: onTap,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Section(
       child: Column(
         children: [
@@ -35,18 +56,25 @@ class ContactSection extends StatelessWidget {
             subtitle: "Let's Build Something Amazing",
           ),
 
-          const SizedBox(height: 60),
+          SizedBox(
+            height: isMobile ? 32 : 60,
+          ),
 
           GlassCard(
             child: Column(
               children: [
-                const Text(
+                Text(
                   "I'm currently open to internships, freelance opportunities, and full-time Flutter developer positions.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, height: 1.8),
+                  style: TextStyle(
+                    fontSize: isMobile ? 16 : 18,
+                    height: 1.8,
+                  ),
                 ),
 
-                const SizedBox(height: 40),
+                SizedBox(
+                  height: isMobile ? 24 : 40,
+                ),
 
                 buildItem(
                   FontAwesomeIcons.envelope,
@@ -84,14 +112,19 @@ class ContactSection extends StatelessWidget {
                   },
                 ),
 
-                const SizedBox(height: 30),
+                SizedBox(
+                  height: isMobile ? 20 : 30,
+                ),
 
-                CustomButton(
-                  text: "Send Email",
-                  icon: Icons.send,
-                  onPressed: () {
-                    LaunchUtils.sendMail(AppStrings.email);
-                  },
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Send Email",
+                    icon: Icons.send,
+                    onPressed: () {
+                      LaunchUtils.sendMail(AppStrings.email);
+                    },
+                  ),
                 ),
               ],
             ),
