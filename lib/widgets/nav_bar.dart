@@ -9,6 +9,7 @@ class NavBar extends StatelessWidget {
   final VoidCallback onExperience;
   final VoidCallback onProjects;
   final VoidCallback onContact;
+  final VoidCallback? onMenuPressed;
 
   const NavBar({
     super.key,
@@ -17,6 +18,7 @@ class NavBar extends StatelessWidget {
     required this.onExperience,
     required this.onProjects,
     required this.onContact,
+    this.onMenuPressed,
   });
 
   @override
@@ -42,38 +44,10 @@ class NavBar extends StatelessWidget {
           ),
           const Spacer(),
           if (isMobile)
-            PopupMenuButton<String>(
+            IconButton(
+              onPressed: onMenuPressed,
               icon: const Icon(Icons.menu, color: Colors.white),
-              color: AppColors.card,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onSelected: (value) {
-                switch (value) {
-                  case 'home':
-                    onHome();
-                    break;
-                  case 'experience':
-                    onExperience();
-                    break;
-                  case 'projects':
-                    onProjects();
-                    break;
-                  case 'skills':
-                    onSkills();
-                    break;
-                  case 'contact':
-                    onContact();
-                    break;
-                }
-              },
-              itemBuilder: (context) => [
-                _menuItem('Home', 'home'),
-                _menuItem('Experience', 'experience'),
-                _menuItem('Projects', 'projects'),
-                _menuItem('Skills', 'skills'),
-                _menuItem('Contact', 'contact'),
-              ],
+              tooltip: 'Open menu',
             )
           else ...[
             navButton("Home", onHome),
@@ -84,13 +58,6 @@ class NavBar extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-
-  PopupMenuEntry<String> _menuItem(String label, String value) {
-    return PopupMenuItem<String>(
-      value: value,
-      child: Text(label, style: const TextStyle(color: Colors.white)),
     );
   }
 

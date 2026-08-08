@@ -46,106 +46,112 @@ class _ProjectCardState extends State<ProjectCard> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                alignment: Alignment.center,
+          child: Scrollbar(
+            thumbVisibility: true,
+            trackVisibility: true,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AnimatedScale(
-                    duration: const Duration(milliseconds: 300),
-                    scale: hovering ? 1.08 : 1.0,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Image.asset(
-                        widget.project.image,
-                        fit: BoxFit.cover,
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      AnimatedScale(
+                        duration: const Duration(milliseconds: 300),
+                        scale: hovering ? 1.08 : 1.0,
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: Image.asset(
+                            widget.project.image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 250),
-                    opacity: hovering ? 1.0 : 0.0,
-                    child: Container(color: Colors.black54),
-                  ),
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 250),
-                    opacity: hovering ? 1.0 : 0.0,
-                    child: SocialButton(
-                      icon: const FaIcon(
-                        FontAwesomeIcons.github,
-                        size: 20,
-                        color: Colors.white,
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 250),
+                        opacity: isMobile ? 1.0 : (hovering ? 1.0 : 0.0),
+                        child: Container(color: Colors.black54),
                       ),
-                      onPressed: () {
-                        LaunchUtils.openUrl(widget.project.github);
-                      },
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 250),
+                        opacity: isMobile ? 1.0 : (hovering ? 1.0 : 0.0),
+                        child: SocialButton(
+                          icon: const FaIcon(
+                            FontAwesomeIcons.github,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            LaunchUtils.openUrl(widget.project.github);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(isMobile ? 18 : 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.project.title,
+                          style: TextStyle(
+                            fontSize: isMobile ? 22 : 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          widget.project.subtitle,
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: isMobile ? 14 : 16,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          widget.project.description,
+                          style: TextStyle(
+                            height: 1.7,
+                            fontSize: isMobile ? 14 : 16,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: widget.project.technologies
+                              .map((tech) => Chip(label: Text(tech)))
+                              .toList(),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                AppColors.primary,
+                              ),
+                            ),
+                            onPressed: () =>
+                                LaunchUtils.openUrl(widget.project.github),
+                            icon: const FaIcon(
+                              FontAwesomeIcons.github,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'View Source',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.all(isMobile ? 18 : 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.project.title,
-                      style: TextStyle(
-                        fontSize: isMobile ? 22 : 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      widget.project.subtitle,
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontSize: isMobile ? 14 : 16,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      widget.project.description,
-                      style: TextStyle(
-                        height: 1.7,
-                        fontSize: isMobile ? 14 : 16,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: widget.project.technologies
-                          .map((tech) => Chip(label: Text(tech)))
-                          .toList(),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            AppColors.primary,
-                          ),
-                        ),
-                        onPressed: () =>
-                            LaunchUtils.openUrl(widget.project.github),
-                        icon: const FaIcon(
-                          FontAwesomeIcons.github,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        label: const Text(
-                          "View Source",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

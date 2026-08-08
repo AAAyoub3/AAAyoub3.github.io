@@ -27,10 +27,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
     // Preload all project images once.
     for (final project in PortfolioData.projects) {
-      precacheImage(
-        AssetImage(project.image),
-        context,
-      );
+      precacheImage(AssetImage(project.image), context);
     }
   }
 
@@ -53,28 +50,15 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       )
         PortfolioData.projects.sublist(
           i,
-          min(
-            i + currentItemsPerPage,
-            PortfolioData.projects.length,
-          ),
+          min(i + currentItemsPerPage, PortfolioData.projects.length),
         ),
     ];
 
-    /*
-     * Calculate a proper height for the PageView.
-     *
-     * The PageView MUST have a bounded height.
-     *
-     * Mobile:
-     *   1 project → taller card
-     *
-     * Tablet/Desktop:
-     *   2 projects side by side
-     */
+    final screenHeight = MediaQuery.sizeOf(context).height;
     final double projectsHeight;
 
     if (isMobile) {
-      projectsHeight = 620;
+      projectsHeight = (screenHeight * 0.76).clamp(620, 780).toDouble();
     } else if (isTablet) {
       projectsHeight = 620;
     } else {
@@ -84,14 +68,9 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     return Section(
       child: Column(
         children: [
-          const SectionTitle(
-            title: "PROJECTS",
-            subtitle: "Featured Projects",
-          ),
+          const SectionTitle(title: "PROJECTS", subtitle: "Featured Projects"),
 
-          SizedBox(
-            height: isMobile ? 16 : 24,
-          ),
+          SizedBox(height: isMobile ? 16 : 24),
 
           // --------------------------------------------------
           // Pagination Controls
@@ -105,28 +84,18 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                     ? null
                     : () {
                         controller.previousPage(
-                          duration: const Duration(
-                            milliseconds: 600,
-                          ),
+                          duration: const Duration(milliseconds: 600),
                           curve: Curves.easeOutCubic,
                         );
                       },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 18,
-                ),
+                icon: const Icon(Icons.arrow_back_ios, size: 18),
               ),
 
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   "${currentPage + 1} / ${pages.length}",
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 16),
                 ),
               ),
 
@@ -136,30 +105,23 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                     ? null
                     : () {
                         controller.nextPage(
-                          duration: const Duration(
-                            milliseconds: 600,
-                          ),
+                          duration: const Duration(milliseconds: 600),
                           curve: Curves.easeOutCubic,
                         );
                       },
-                icon: const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18,
-                ),
+                icon: const Icon(Icons.arrow_forward_ios, size: 18),
               ),
             ],
           ),
 
-          SizedBox(
-            height: isMobile ? 24 : 40,
-          ),
+          SizedBox(height: isMobile ? 24 : 40),
 
           // --------------------------------------------------
           // IMPORTANT:
           // PageView MUST have a bounded height.
           // --------------------------------------------------
           SizedBox(
-            height: projectsHeight,
+            height: projectsHeight * 1.1,
             child: PageView.builder(
               controller: controller,
               itemCount: pages.length,
@@ -186,61 +148,40 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                       final page = controller.page;
 
                       if (page != null) {
-                        final difference =
-                            (page - pageIndex).abs();
+                        final difference = (page - pageIndex).abs();
 
-                        scale = (1 - difference * 0.08)
-                            .clamp(0.92, 1.0);
+                        scale = (1 - difference * 0.08).clamp(0.92, 1.0);
 
-                        opacity = (1 - difference * 0.15)
-                            .clamp(0.85, 1.0);
+                        opacity = (1 - difference * 0.15).clamp(0.85, 1.0);
                       }
                     }
 
                     return Transform.scale(
                       scale: scale,
-                      child: Opacity(
-                        opacity: opacity,
-                        child: child,
-                      ),
+                      child: Opacity(opacity: opacity, child: child),
                     );
                   },
-
-                  child: GridView.builder(
-                    // The GridView is not responsible for scrolling.
-                    physics:
-                        const NeverScrollableScrollPhysics(),
-
-                    // The PageView controls the scrolling.
-                    shrinkWrap: true,
-
-                    padding: EdgeInsets.zero,
-
-                    itemCount: projects.length,
-
-                    gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isMobile ? 1 : 2,
-
-                      crossAxisSpacing: isMobile ? 0 : 20,
-
-                      mainAxisSpacing: 20,
-
-                      /*
-                       * Project cards should have enough
-                       * vertical space to display completely.
-                       */
-                      childAspectRatio: isMobile
-                          ? 0.78
-                          : 0.78,
-                    ),
-
-                    itemBuilder: (context, index) {
-                      return ProjectCard(
-                        project: projects[index],
-                      );
-                    },
-                  ),
+                  child: isMobile
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: ProjectCard(project: projects.first),
+                        )
+                      : GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          itemCount: projects.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 20,
+                                childAspectRatio: 0.78,
+                              ),
+                          itemBuilder: (context, index) {
+                            return ProjectCard(project: projects[index]);
+                          },
+                        ),
                 );
               },
             ),

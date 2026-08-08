@@ -174,6 +174,12 @@ class PortfolioData {
       icon: Icons.css,
       description: "Styling language",
     ),
+    Skill(
+      title: "Problem Solving",
+      category: "Programming",
+      icon: Icons.css,
+      description: "Styling language",
+    ),
   ];
 
   // ==========================================================

@@ -32,24 +32,38 @@ class HeroSection extends StatelessWidget {
               child: const Text("👋 Hello, I'm"),
             ),
             SizedBox(height: isMobile ? 20 : 30),
-            Text(
-              AppStrings.name,
-              style: TextStyle(
-                fontSize: Responsive.heroTitleSize(context),
-                fontWeight: FontWeight.bold,
-                height: 1.1,
+            SizedBox(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: isMobile ? Alignment.center : Alignment.centerLeft,
+                child: Text(
+                  AppStrings.name,
+                  style: TextStyle(
+                    fontSize: Responsive.heroTitleSize(context) - 2,
+                    fontWeight: FontWeight.bold,
+                    height: 1.1,
+                  ),
+                  textAlign: isMobile ? TextAlign.center : TextAlign.start,
+                ),
               ),
-              textAlign: isMobile ? TextAlign.center : TextAlign.start,
             ),
             SizedBox(height: isMobile ? 14 : 18),
-            Text(
-              AppStrings.title,
-              style: TextStyle(
-                fontSize: Responsive.heroSubtitleSize(context),
-                color: Colors.blue,
-                fontWeight: FontWeight.w600,
+            SizedBox(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: isMobile ? Alignment.center : Alignment.centerLeft,
+                child: Text(
+                  AppStrings.title,
+                  style: TextStyle(
+                    fontSize: Responsive.heroSubtitleSize(context),
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: isMobile ? TextAlign.center : TextAlign.start,
+                ),
               ),
-              textAlign: isMobile ? TextAlign.center : TextAlign.start,
             ),
             SizedBox(height: isMobile ? 20 : 30),
             ConstrainedBox(
