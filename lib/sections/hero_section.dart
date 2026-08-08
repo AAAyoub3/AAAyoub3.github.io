@@ -86,7 +86,13 @@ class HeroSection extends StatelessWidget {
                 CustomButton(
                   text: "Download CV",
                   icon: Icons.download,
-                  onPressed: downloadCv,
+                  onPressed: () {
+                    html.AnchorElement(
+                        href: 'assets/assets/resume/Abdelrahman_Ayoub_CV.pdf',
+                      )
+                      ..setAttribute('download', 'Abdelrahman_Ayoub_CV.pdf')
+                      ..click();
+                  },
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -158,11 +164,5 @@ class HeroSection extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void downloadCv() {
-    html.AnchorElement(href: 'assets/resume/Abdelrahman_Ayoub_CV.pdf')
-      ..setAttribute('download', 'Abdelrahman_Ayoub_CV.pdf')
-      ..click();
   }
 }
