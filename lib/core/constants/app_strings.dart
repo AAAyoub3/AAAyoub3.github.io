@@ -10,7 +10,7 @@ class AppStrings {
   static const String title = "Mobile Developer | Flutter";
 
   static const String shortDescription =
-      "Mobile Developer with 1+ year of experience building scalable Flutter applications using Clean Architecture, Firebase, AI-powered solutions, and modern software engineering practices.";
+      "Junior Flutter Developer with 3+ years of hands-on and project-based Flutter development experience building cross-platform Android and iOS applications. Experienced in Flutter, Dart, BLoC/Cubit, Clean Architecture, REST APIs, Firebase, testing, and CI/CD. Developed 6 Flutter applications spanning e-commerce, delivery, fitness, education, social media, and entertainment.";
 
   static const String email = "abdelrahman.ayoub23@gmail.com";
 
